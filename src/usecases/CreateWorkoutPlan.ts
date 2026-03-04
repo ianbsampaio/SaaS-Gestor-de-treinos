@@ -1,3 +1,4 @@
+import { NotFoundError } from "../errors/index.js";
 import { WeekDay } from "../generated/prisma/enums.js";
 import { prisma } from "../lib/db.js";
 
@@ -41,6 +42,7 @@ export class CreateWorkoutPlan {
       }
       const workoutPlan = await tx.workoutPlan.create({
         data: {
+          id: crypto.randomUUID(),
           name: dto.name,
           userId: dto.userId,
           isActive: true,
@@ -74,7 +76,7 @@ export class CreateWorkoutPlan {
         },
       });
       if (!result) {
-        throw new Error("Workout plan not found");
+        throw new NotFoundError("Workout plan not found");
       }
 
       return result;
